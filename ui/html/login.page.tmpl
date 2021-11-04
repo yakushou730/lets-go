@@ -6,6 +6,7 @@ Login
 
 {{define "main"}}
 <form action="/user/login" method="post" novalidate>
+    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
     {{with .Form}}
         {{with .Errors.Get "generic"}}
         <div class="error">{{.}}</div>
