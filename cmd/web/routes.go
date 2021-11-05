@@ -27,6 +27,7 @@ func (app *application) routes() http.Handler {
 	mux.Post("/user/logout", dynamicMiddleware.Append(app.requireAuthentication).ThenFunc(app.logoutUser))
 
 	mux.Get("/ping", http.HandlerFunc(ping))
+	mux.Get("/about", dynamicMiddleware.ThenFunc(app.about))
 
 	fileServer := http.FileServer(http.FS(ui.Files))
 	mux.Get("/static/", fileServer)
