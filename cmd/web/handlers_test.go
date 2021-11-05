@@ -219,3 +219,33 @@ func TestSignupUser(t *testing.T) {
 		})
 	}
 }
+
+func TestCreateSnippetForm(t *testing.T) {
+	app := newTestApplication(t)
+	ts := newTestServer(t, app.routes())
+	defer ts.Close()
+
+	tests := []struct {
+		name         string
+		wantCode     int
+		wantLocation string
+	}{
+		{
+			name:         "Unauthenticated",
+			wantCode:     http.StatusSeeOther,
+			wantLocation: "/user/login",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			code, headers, _ := ts.get(t, "/snippet/create")
+			if code != tt.wantCode {
+				t.Errorf("want %d; got %d", tt.wantCode, code)
+			}
+			if headers.Get("Location") != "/user/login" {
+				t.Errorf("want %s; got %s", tt.wantLocation, headers.Get("Location"))
+			}
+		})
+	}
+}
