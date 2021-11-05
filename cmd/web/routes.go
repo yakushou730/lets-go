@@ -3,6 +3,8 @@ package main
 import (
 	"net/http"
 
+	"github.com/yakushou730/lets-go/ui"
+
 	"github.com/bmizerany/pat"
 
 	"github.com/justinas/alice"
@@ -26,8 +28,8 @@ func (app *application) routes() http.Handler {
 
 	mux.Get("/ping", http.HandlerFunc(ping))
 
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	mux.Get("/static/", http.StripPrefix("/static", fileServer))
+	fileServer := http.FileServer(http.FS(ui.Files))
+	mux.Get("/static/", fileServer)
 
 	return standardMiddleware.Then(mux)
 }
